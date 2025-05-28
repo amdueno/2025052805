@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google AI Studio インフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 
+        Narrative & Structure Plan:
+        The infographic presents "Google AI Studio 学習資料" in a digestible, visual format.
+        Sections:
+        1. イントロダクション (Introduction): What is AI Studio? Core Benefits (Big Numbers).
+        2. 主要機能 (Core Functionalities): Overview of Prompts, Video/Audio Analysis, Image Generation, Voice (Cards with Icons).
+        3. 開発ワークフロー (Development Workflow): Simple visual flow of API access to application (HTML/CSS Diagram).
+        4. 学習リソース (Learning Resources): Types and distribution of learning materials (Donut Chart from Table 2).
+        5. 主要な考慮事項 (Key Considerations): Japanese performance, Security, Free Tiers (Cards with Icons).
+        6. 結論 (Conclusion): Brief summary.
+        This structure follows the report's flow, making it easy for users familiar with the report to navigate, and for new users to understand AI Studio's offerings progressively.
+    -->
+    <!-- 
+        Visualization Choices:
+        - Section 1 - AI Studio Benefits: Goal: Inform. Viz: Large Text (Big Numbers) for "無料アクセス (Free Access)", "コーディング不要 (No Coding Required)". Justification: Quick impact for key benefits. Method: Styled HTML.
+        - Section 2 - Core Functionalities: Goal: Organize/Inform. Viz: Cards with Unicode Icons (📝, 🎬, 🖼️, 🎤). Justification: Clear, concise overview of each feature. Method: HTML/CSS (Tailwind).
+        - Section 3 - Development Workflow: Goal: Organize/Inform. Viz: Simple Flow Diagram (APIキー -> モデル選択 -> アプリ開発). Justification: Visualizes the development path simply. Method: HTML/CSS (Tailwind with borders/flex). NO SVG/Mermaid.
+        - Section 4 - Learning Resources: Goal: Compare/Inform. Viz: Donut Chart. Justification: Shows proportions of different resource types from Table 2. Library: Chart.js (Canvas). Label wrapping & tooltip config applied. Data: Official Docs, Codelabs, GitHub, Blogs, YouTube, Community.
+        - Section 5 - Key Considerations: Goal: Inform. Viz: Cards with Unicode Icons (🇯🇵, 🔒, 🆓). Justification: Highlights important usage notes. Method: HTML/CSS (Tailwind).
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif; /* Added Japanese font */
+        }
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            backdrop-filter: blur(10px);
+        }
+        .nav-item.active {
+            color: #F97316; /* orange-500 */
+            border-bottom-color: #F97316; /* orange-500 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px; /* Adjusted for donut chart */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Adjusted for donut chart */
+            max-height: 450px; /* Adjusted for donut chart */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .section-card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem; /* 24px */
+            margin-bottom: 1.5rem; /* 24px */
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            background-color: #F0F9FF; /* sky-50 */
+            border-radius: 0.5rem; /* 8px */
+            border: 1px solid #BAE6FD; /* sky-200 */
+            min-height: 100px;
+            justify-content: center;
+        }
+        .flow-arrow {
+            font-size: 2rem; /* 32px */
+            color: #F97316; /* orange-500 */
+            margin: 0 0.5rem;
+        }
+         .big-number-value {
+            font-size: 3rem; /* 48px */
+            font-weight: 700;
+            color: #14B8A6; /* teal-500 */
+        }
+        .big-number-label {
+            font-size: 1.125rem; /* 18px */
+            color: #475569; /* slate-600 */
+            margin-top: 0.5rem; /* 8px */
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <nav id="navbar" class="sticky-nav shadow-md">
+        <div class="container mx-auto px-6 py-3 flex justify-around items-center">
+            <a href="#introduction" class="nav-item text-slate-600 hover:text-orange-500 px-3 py-2 border-b-2 border-transparent transition-colors duration-300">イントロ</a>
+            <a href="#features" class="nav-item text-slate-600 hover:text-orange-500 px-3 py-2 border-b-2 border-transparent transition-colors duration-300">主要機能</a>
+            <a href="#development" class="nav-item text-slate-600 hover:text-orange-500 px-3 py-2 border-b-2 border-transparent transition-colors duration-300">開発</a>
+            <a href="#resources" class="nav-item text-slate-600 hover:text-orange-500 px-3 py-2 border-b-2 border-transparent transition-colors duration-300">学習リソース</a>
+            <a href="#considerations" class="nav-item text-slate-600 hover:text-orange-500 px-3 py-2 border-b-2 border-transparent transition-colors duration-300">考慮事項</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <section id="introduction" class="pt-16 -mt-16 mb-12">
+            <div class="section-card">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-2 text-orange-600">Google AI Studio へようこそ</h2>
+                <p class="text-xl text-center text-slate-600 mb-8">Geminiモデルへの最速ゲートウェイ</p>
+                <p class="text-slate-700 mb-8 leading-relaxed">
+                    Google AI Studioは、Googleの最新AIモデル「Gemini」へのアクセスを容易にし、AIアプリケーション開発の可能性を広げる強力なウェブベースのプラットフォームです。直感的な操作で、プログラミング経験が浅い方でも、テキスト生成、画像分析、モデルのカスタマイズなど、多岐にわたるAI機能を活用できます。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                    <div class="bg-teal-50 p-6 rounded-lg shadow-md">
+                        <div class="big-number-value">無料</div>
+                        <p class="big-number-label">アクセス</p>
+                        <p class="text-sm text-teal-700 mt-2">高性能AIモデル(Gemini 1.5 Pro等)を無料で利用可能。</p>
+                    </div>
+                    <div class="bg-yellow-50 p-6 rounded-lg shadow-md">
+                        <div class="big-number-value">簡単</div>
+                        <p class="big-number-label">操作</p>
+                        <p class="text-sm text-yellow-700 mt-2">コーディング不要。テキスト指示だけでAIがタスクを実行。</p>
+                    </div>
+                </div>
+                 <p class="text-slate-700 mt-8 leading-relaxed">
+                    このプラットフォームは、Vertex AIのようなより高度なGoogle Cloudサービスへの足がかりともなり、AI技術の民主化とイノベーションを推進します。
+                </p>
+            </div>
+        </section>
+
+        <section id="features" class="pt-16 -mt-16 mb-12">
+            <div class="section-card">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-orange-600">AI Studioの主要機能</h2>
+                <p class="text-center text-slate-600 mb-8 leading-relaxed">
+                    Google AI Studioは、多様なAIタスクに対応する豊富な機能セットを提供します。これにより、ユーザーはアイデアを迅速に形にし、AIの可能性を最大限に引き出すことができます。
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-sky-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <span class="text-5xl">📝</span>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-sky-700">効果的なプロンプト</h3>
+                        <p class="text-sm text-slate-600">システム指示でAIの応答をカスタマイズ。プロンプトギャラリーも活用可能。</p>
+                    </div>
+                    <div class="bg-lime-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <span class="text-5xl">🎬</span>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-lime-700">動画・音声分析</h3>
+                        <p class="text-sm text-slate-600">YouTube動画のURL要約や、アップロードしたメディアの文字起こし・分析。</p>
+                    </div>
+                    <div class="bg-fuchsia-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <span class="text-5xl">🖼️</span>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-fuchsia-700">画像生成・編集</h3>
+                        <p class="text-sm text-slate-600">プロンプトで画像を生成し、自然言語で部分編集。Video Gen機能も搭載。</p>
+                    </div>
+                    <div class="bg-amber-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <span class="text-5xl">🎤</span>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-700">リアルタイム音声対話</h3>
+                        <p class="text-sm text-slate-600">Stream Realtime機能で、AIと自然な音声コミュニケーションを実現。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="development" class="pt-16 -mt-16 mb-12">
+            <div class="section-card">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-orange-600">Gemini APIによる開発フロー</h2>
+                <p class="text-center text-slate-600 mb-8 leading-relaxed">
+                    Google AI Studioの強力な機能は、Gemini APIを通じてプログラムからアクセスし、カスタムアプリケーションに組み込むことができます。
+                </p>
+                <div class="flex flex-col md:flex-row items-center justify-around space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flow-step">
+                        <span class="text-3xl mb-2">🔑</span>
+                        <h4 class="font-semibold text-slate-700">1. APIキー作成</h4>
+                        <p class="text-xs text-slate-500">AI StudioからAPIキーを生成</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">➡️</div>
+                    <div class="flow-arrow md:hidden text-3xl my-2">⬇️</div>
+                    <div class="flow-step">
+                        <span class="text-3xl mb-2">💻</span>
+                        <h4 class="font-semibold text-slate-700">2. プログラムアクセス</h4>
+                        <p class="text-xs text-slate-500">Python, cURL等でモデルを呼び出し</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">➡️</div>
+                    <div class="flow-arrow md:hidden text-3xl my-2">⬇️</div>
+                    <div class="flow-step">
+                        <span class="text-3xl mb-2">⚙️</span>
+                        <h4 class="font-semibold text-slate-700">3. モデルチューニング</h4>
+                        <p class="text-xs text-slate-500">特定ニーズに合わせてAIをカスタマイズ</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">➡️</div>
+                    <div class="flow-arrow md:hidden text-3xl my-2">⬇️</div>
+                    <div class="flow-step">
+                        <span class="text-3xl mb-2">🚀</span>
+                        <h4 class="font-semibold text-slate-700">4. アプリ開発・統合</h4>
+                        <p class="text-xs text-slate-500">開発者ワークフローへGenAIを応用</p>
+                    </div>
+                </div>
+                <p class="text-slate-700 mt-8 leading-relaxed text-center">
+                    この柔軟な開発プロセスにより、AI Studioの実験的な成果を実際のアプリケーションへと発展させ、イノベーションを加速できます。
+                </p>
+            </div>
+        </section>
+
+        <section id="resources" class="pt-16 -mt-16 mb-12">
+            <div class="section-card">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-orange-600">学習リソース</h2>
+                <p class="text-center text-slate-600 mb-8 leading-relaxed">
+                    Google AI Studioとその関連技術を深く理解し、使いこなすためには、質の高い学習リソースへのアクセスが不可欠です。
+                </p>
+                <div class="chart-container mx-auto">
+                    <canvas id="learningResourcesChart"></canvas>
+                </div>
+                <p class="text-center text-slate-600 mt-6 leading-relaxed">
+                    公式ドキュメント、Codelabs、GitHubのサンプルコード、技術ブログ、YouTubeチュートリアル、そして開発者コミュニティなど、多様なリソースがあなたの学習をサポートします。これらを活用し、継続的に探求することで、AI Studioの専門性を高めることができます。
+                </p>
+            </div>
+        </section>
+
+        <section id="considerations" class="pt-16 -mt-16 mb-12">
+            <div class="section-card">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-orange-600">主要な考慮事項</h2>
+                 <p class="text-center text-slate-600 mb-8 leading-relaxed">
+                    Google AI Studioを効果的かつ責任を持って利用するために、以下の点を理解しておくことが重要です。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-red-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <span class="text-5xl">🇯🇵</span>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-red-700">日本語パフォーマンス</h3>
+                        <p class="text-sm text-slate-600">応答品質にばらつきがある場合も。プロンプト調整やパラメータ設定で工夫が必要。</p>
+                    </div>
+                    <div class="bg-indigo-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <span class="text-5xl">🔒</span>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-indigo-700">セキュリティ</h3>
+                        <p class="text-sm text-slate-600">APIキーは環境変数に保存し厳重管理。機密データの扱いに注意。</p>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <span class="text-5xl">🆓</span>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-green-700">無料ティアとポリシー</h3>
+                        <p class="text-sm text-slate-600">無料版では入力データがモデル学習に使用される可能性。商用利用はVertex AIを検討。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="pt-16 -mt-16 mb-12">
+            <div class="section-card text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-orange-600">AI Studioの専門性を高めよう</h2>
+                <p class="text-slate-700 mb-6 leading-relaxed">
+                    Google AI StudioとGeminiモデルは、AI開発の新たな地平を切り開きます。本インフォグラフィックで紹介した情報を活用し、継続的な探求と実践を重ねることで、あなたもAI技術がもたらす変革の最前線に立つことができるでしょう。
+                </p>
+                <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" 
+                   class="inline-block bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                    AI Studioを使ってみる
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <footer class="text-center py-8 mt-8 border-t border-slate-300 bg-white">
+        <p class="text-sm text-slate-600">&copy; 2024 Google AI Studio インフォグラフィック. All rights reserved.</p>
+        <p class="text-xs text-slate-500 mt-1">このインフォグラフィックはGeminiから提供されたレポートに基づき作成されました。</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chartCtx = document.getElementById('learningResourcesChart')?.getContext('2d');
+            if (chartCtx) {
+                const learningChartData = {
+                    labels: [
+                        '公式ドキュメント', 
+                        'Codelabs', 
+                        ['主要なGitHub', 'サンプルリポジトリ'], // Wrapped label
+                        '技術ブログ', 
+                        'YouTubeチャンネル/動画', 
+                        'コミュニティフォーラム'
+                    ],
+                    datasets: [{
+                        label: '学習リソースタイプ',
+                        data: [25, 15, 20, 15, 15, 10], // Example data
+                        backgroundColor: [
+                            '#F97316', // orange-500
+                            '#14B8A6', // teal-500
+                            '#EAB308', // yellow-500
+                            '#EC4899', // pink-500
+                            '#8B5CF6', // violet-500
+                            '#3B82F6'  // blue-500
+                        ],
+                        hoverOffset: 8,
+                        borderColor: '#f8fafc', // slate-50 (light background for contrast)
+                        borderWidth: 2
+                    }]
+                };
+                new Chart(chartCtx, {
+                    type: 'doughnut',
+                    data: learningChartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#475569', // slate-600
+                                    font: {
+                                        size: 11, // Adjusted for potentially wrapped labels
+                                    },
+                                    padding: 15,
+                                    boxWidth: 12,
+                                    // Custom label generation to handle array labels better if needed
+                                    generateLabels: function(chart) {
+                                        const data = chart.data;
+                                        if (data.labels.length && data.datasets.length) {
+                                            return data.labels.map(function(label, i) {
+                                                const meta = chart.getDatasetMeta(0);
+                                                const style = meta.controller.getStyle(i);
+                                                return {
+                                                    text: Array.isArray(label) ? label.join(' ') : label,
+                                                    fillStyle: style.backgroundColor,
+                                                    strokeStyle: style.borderColor,
+                                                    lineWidth: style.borderWidth,
+                                                    hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                                                    index: i
+                                                };
+                                            });
+                                        }
+                                        return [];
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function(tooltipItems) {
+                                        const item = tooltipItems[0];
+                                        let label = item.chart.data.labels[item.dataIndex];
+                                        if (Array.isArray(label)) {
+                                          return label.join(' ');
+                                        } else {
+                                          return label;
+                                        }
+                                    },
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + '%';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '60%' 
+                    }
+                });
+            }
+
+            // Scrollspy for navigation
+            const sections = document.querySelectorAll('section');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            function activateNavItem() {
+                let currentSectionId = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    // Adjust for sticky nav height if necessary, here 50 is an estimate
+                    if (pageYOffset >= (sectionTop - sectionHeight / 3 - 64)) { 
+                        currentSectionId = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${currentSectionId}`) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', activateNavItem);
+            activateNavItem(); // Initial call
+
+            // Smooth scroll for nav links
+            navItems.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        // 64px for sticky nav height
+                        const offsetPosition = targetElement.offsetTop - 64; 
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
